@@ -13,6 +13,10 @@ if (typeof window !== 'undefined') {
 export const TransactionProvider = ({ children }) => {
   const [currentAccount, setCurrentAccount] = useState()
 
+  useEffect(() => {
+    checkIfWalletIsConnected()
+  }, [])
+
 
 /*
  * Prompts user to connect their MetaMask wallet
@@ -29,6 +33,23 @@ export const TransactionProvider = ({ children }) => {
       throw new Error('No ethereum object.')
     }
   }
+
+  const checkIfWalletIsConnected = async (metamask = eth) => {
+    try {
+      if (!metamask) return alert('Please install metamask')
+
+      const accounts = await metamask.request({method: 'eth_accounts'})
+
+      if (accounts.length) {
+        setCurrentAccount(accounts[0])
+        console.log('wallet is already connected!')
+      }
+    } catch (error) {
+      console.error(error)
+      throw new Error('No ethereum object')
+    }
+  }
+
   return (
     <TransactionContext.Provider
       value={{

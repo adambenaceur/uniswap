@@ -16,11 +16,12 @@ const style = {
   navItem: `px-4 py-2 m-1 flex items-center text-lg font-semibold text-[0.9rem] cursor-pointer rounded-3xl`,
   activeNavItem: `bg-[#20242A]`,
   buttonsContainer: `flex w-1/4 justify-end items-center`,
-  button: `flex items-center bg-[#191B1F] rounded-2xl mx-2 text-[0.9rem] font-semibold cursor-pointer`,
+  button: `flex items-center bg-[#191B1F] rounded-2xl mx-2 text-[0.9rem] font-semibold cursor-pointer `,
   buttonPadding: `p-2`,
-  buttonTextContainer: `h-8 flex items-center`,
+  buttonTextContainer: `h-8 flex items-center `,
   buttonIconContainer: `flex items-center justify-center w-8 h-8`,
   buttonAccent: `bg-[#172A42] border border-[#163256] hover:border-[#234169] h-full rounded-2xl flex items-center justify-center text-[#4F90EA]`,
+  buttonActive: `text-ellipsis overflow-hidden`
 }
 
 const Header = () => {
@@ -72,6 +73,7 @@ const Header = () => {
           </a>
         </div>
       </div>
+     
       <div className={style.buttonsContainer}>
         <div className={`${style.button} ${style.buttonPadding}`}>
           <div className={style.buttonIconContainer}>
@@ -82,7 +84,14 @@ const Header = () => {
             <AiOutlineDown />
           </div>
         </div>
-        
+          {currentAccount ? (
+          <div className={`${style.button} ${style.buttonPadding} ${style.buttonActive}`}>
+            <div className={`${style.buttonTextContainer} ${style.buttonActive}`}>
+              <p className='text-ellipsis overflow-hidden'>{currentAccount} </p>
+            </div>
+          </div>
+          ) : (
+          
           <div
             onClick={() => connectWallet()}
             className={`${style.button} ${style.buttonPadding}`}
@@ -90,7 +99,8 @@ const Header = () => {
             <div className={`${style.buttonAccent} ${style.buttonPadding}`}>
               Connect Wallet
             </div>
-          </div>
+          </div>) }
+          
         <div className={`${style.button} ${style.buttonPadding}`}>
           <div className={`${style.buttonIconContainer} mx-2`}>
             <HiOutlineDotsVertical />
