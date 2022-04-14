@@ -35,6 +35,24 @@ export const TransactionProvider = ({ children }) => {
     checkIfWalletIsConnected()
   }, [])
 
+/* 
+ * Create userprofile in Sanity
+ */ 
+
+  useEffect(() => {
+    if (!currentAccount) return
+    ;(async() => {
+      const userDoc = {
+        _type: 'users',
+        _id: currentAccount,
+        userName: 'Unnamed',
+        address: currentAccount,
+      }
+
+      await client.createIfNotExists(userDoc)
+    })()
+
+  }, [currentAccount])
 
 /*
  * Prompts user to connect their MetaMask wallet
