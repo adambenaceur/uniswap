@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { ethers } from 'ethers'
 import { contractABI, contractAddress} from '../lib/constants'
+import { client } from '../lib/sanityClient'
 
 export const TransactionContext = React.createContext()
 
@@ -88,12 +89,12 @@ export const TransactionProvider = ({ children }) => {
 
 
       // database call
-      // await saveTransaction(
-      //   transactionHash.hash,
-      //   amount,
-      //   connectedAccount,
-      //   addressTo
-      // )
+      await saveTransaction(
+        transactionHash.hash,
+        amount,
+        connectedAccount,
+        addressTo
+      )
 
       setIsLoading(false)
 
@@ -120,6 +121,39 @@ export const TransactionProvider = ({ children }) => {
 
   const handleChange = (e, name) => {
     setFormData((prevState) => ({ ...prevState, [name]: e.target.value}))
+  }
+
+  const saveTransaction = async (
+    txHash,
+    amount,
+    fromAddress = currentAccount,
+    toAddress, 
+  ) => {
+    const  txDoc = {
+      _type: 'transactions',
+      _id: txHash,
+      fromAddress: fromAddress,
+      toAddress: toAddress,
+      timestamp: new Date(Date.now()).toISOString(),
+      txHash: txHash,
+      amount: parseFloat(amount),
+    }
+    
+    await client.createIfNotExists(txDoc)
+
+    await client
+      .patch(currentAccount)
+      .setIfMissing({transactions: [] })
+      .insert('after', 'transactions[-1]',[
+        {
+          _key: txHash,
+          _ref: txHash,
+          _type: 'reference',
+        }
+      ])
+      .commit()
+      
+    return
   }
 
   return (
