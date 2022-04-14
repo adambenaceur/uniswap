@@ -21,9 +21,16 @@ const style = {
 }
 
 const Main = () => {
-  const handleChange = useContext(TransactionContext)
+
+  const {formData, handleChange, sendTransaction} = useContext(TransactionContext)
+
   const handleSubmit = async (e: any) => {
+    const { addressTo, amount } = formData
     e.preventDefault()
+
+    if (!addressTo || !amount ) return
+
+    sendTransaction()
   }
 
   return (

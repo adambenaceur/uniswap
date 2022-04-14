@@ -7,6 +7,7 @@ import ethLogo from '../assets/eth.png'
 import uniswapLogo from '../assets/uniswap.png'
 import { useContext } from 'react'
 import { TransactionContext } from '../context/TransactionContext'
+import { stringify } from 'querystring'
 
 const style = {
   wrapper: `p-4 w-screen flex justify-between items-center`,
@@ -21,13 +22,18 @@ const style = {
   buttonTextContainer: `h-8 flex items-center `,
   buttonIconContainer: `flex items-center justify-center w-8 h-8`,
   buttonAccent: `bg-[#172A42] border border-[#163256] hover:border-[#234169] h-full rounded-2xl flex items-center justify-center text-[#4F90EA]`,
-  buttonActive: `text-ellipsis overflow-hidden`
+  buttonActive: `text-ellipsis overflow-hidden`,
+  buttonUserName: `text-ellipsis overflow-hidden text-[0.9rem] font-semibold uppercase`,
 }
 
 const Header = () => {
   const [selectedNav, setSelectedNav] = useState('swap')
   const [userName, setUserName] = useState<string>()
   const { connectWallet, currentAccount } = useContext(TransactionContext)
+
+  useEffect(() => {
+    setUserName(`${currentAccount?.slice(0,6)} ... ${currentAccount?.slice(38)}`)
+  }, [currentAccount])
 
   console.log({connectWallet,currentAccount})
   
@@ -87,11 +93,10 @@ const Header = () => {
           {currentAccount ? (
           <div className={`${style.button} ${style.buttonPadding} ${style.buttonActive}`}>
             <div className={`${style.buttonTextContainer} ${style.buttonActive}`}>
-              <p className='text-ellipsis overflow-hidden'>{currentAccount} </p>
+              <p className={`${style.buttonUserName}`}>{userName}</p>
             </div>
           </div>
           ) : (
-          
           <div
             onClick={() => connectWallet()}
             className={`${style.button} ${style.buttonPadding}`}
