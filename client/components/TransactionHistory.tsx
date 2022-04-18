@@ -42,8 +42,8 @@ function TransactionHistory() {
             {transactionHistory && transactionHistory?.map((transaction, index) => (
                 <div className={style.txHistoryItem} key={index}>
                     <div className={style.txDetails}>
-                        <Image src={ethLogo} height={20} width={15} alt='eth'/>
-                        {transaction.amount} Ξ send to &nbsp;
+                        <Image src={ethLogo} height={20} width={15} alt='eth'/> 
+                        &nbsp; {transaction.amount} Ξ send to &nbsp;
                         <span className={style.toAddress}>
                             {transaction.toAddress.substring(0,6)}... &nbsp;
                         </span>

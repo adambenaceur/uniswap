@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { ethers } from 'ethers'
 import { contractABI, contractAddress} from '../lib/constants'
 import { client } from '../lib/sanityClient'
+import { useRouter } from 'next/router'
 
 export const TransactionContext = React.createContext()
 
@@ -30,6 +31,8 @@ export const TransactionProvider = ({ children }) => {
     addressTo: '',
     amount: '',
   })
+
+  const router = useRouter()
 
   useEffect(() => {
     checkIfWalletIsConnected()
@@ -173,6 +176,18 @@ export const TransactionProvider = ({ children }) => {
       
     return
   }
+
+/* 
+ * Trigger loading modal
+ */
+
+  useEffect(() => {
+    if (isLoading) {
+      router.push(`./?loading=${currentAccount}`)
+    } else {
+      router.push(`/`)
+    }
+  }, [isLoading])
 
   return (
     <TransactionContext.Provider
